@@ -19,7 +19,7 @@ export function isLocaleSlug(value: string): value is LocaleSlug {
 }
 
 export function mortgageCalculatorUrl(locale: LocaleSlug): string {
-  return `${siteUrl}/${locale}/mortgage-calculator/`;
+  return `${siteUrl}/${locale}/mortgage-calculator`;
 }
 
 export function mortgageCalculatorAlternates(): Record<string, string> {
