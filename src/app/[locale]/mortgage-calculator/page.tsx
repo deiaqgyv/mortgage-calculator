@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import MortgageCalculator, { type Locale } from '../../../components/mortgage-calculator';
-import { localeFaq } from '../../../lib/locales';
+import { localeFaq, localeSeo } from '../../../lib/locales';
 import { isLocaleSlug, localeBySlug, mortgageCalculatorAlternates, mortgageCalculatorUrl, siteUrl, supportedLocaleSlugs } from '../../../lib/seo';
 
 export function generateStaticParams() {
@@ -11,9 +11,10 @@ export function generateStaticParams() {
 export function generateMetadata({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }): Promise<Metadata> {
   return Promise.all([params, searchParams]).then(([{ locale }, query]) => {
     if (!isLocaleSlug(locale)) return {};
+    const seoCopy = localeSeo[localeBySlug[locale]];
     return {
-    title: `Mortgage calculator | ${localeBySlug[locale]}`,
-    description: 'Estimate monthly mortgage payments, total interest, and extra payment savings with clear assumptions.',
+    title: seoCopy.title,
+    description: seoCopy.description,
     alternates: { canonical: mortgageCalculatorUrl(locale), languages: mortgageCalculatorAlternates() },
     robots: query.share ? { index: false, follow: true } : undefined,
   }; });
