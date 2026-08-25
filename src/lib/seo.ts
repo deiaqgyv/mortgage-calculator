@@ -12,7 +12,7 @@ export const localeBySlug = {
   'es-es': 'es-ES',
 } as const;
 
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mortgagebreezy.com').replace(/\/$/, '');
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.mortgagebreezy.com').replace(/\/$/, '');
 
 export function isLocaleSlug(value: string): value is LocaleSlug {
   return supportedLocaleSlugs.includes(value as LocaleSlug);
