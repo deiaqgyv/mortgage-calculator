@@ -25,6 +25,6 @@ export function mortgageCalculatorUrl(locale: LocaleSlug): string {
 export function mortgageCalculatorAlternates(): Record<string, string> {
   return {
     ...Object.fromEntries(supportedLocaleSlugs.map((locale) => [localeBySlug[locale], mortgageCalculatorUrl(locale)])),
-    'x-default': `${siteUrl}/`,
+    'x-default': mortgageCalculatorUrl('en-us'),
   };
 }

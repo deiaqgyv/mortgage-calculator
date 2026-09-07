@@ -13,6 +13,6 @@ describe('SEO locale configuration', () => {
     const alternates = mortgageCalculatorAlternates();
     expect(alternates['en-US']).toBe(mortgageCalculatorUrl('en-us'));
     expect(alternates['fr-CA']).toBe(mortgageCalculatorUrl('fr-ca'));
-    expect(alternates['x-default']).toMatch(/\/$/);
+    expect(alternates['x-default']).toBe(mortgageCalculatorUrl('en-us'));
   });
 });
