@@ -19,6 +19,19 @@ describe('mortgage calculations', () => {
     expect(result.monthsSaved).toBeGreaterThan(0);
   });
 
+  it('reports the actual interest-only payment', () => {
+    const result = calculateMortgage({ loanAmount: 360000, annualRate: 7, termYears: 30, extraMonthly: 0, repaymentType: 'interest-only' });
+    expect(result.monthlyPayment).toBeCloseTo(2100, 8);
+    expect(result.paymentPerPeriod).toBeCloseTo(2100, 8);
+    expect(result.schedule[0]?.principal).toBe(0);
+    expect(result.schedule.at(-1)?.balance).toBe(360000);
+  });
+
+  it('converts interest-only payments to a monthly equivalent', () => {
+    const result = calculateMortgage({ country: 'CA', loanAmount: 300000, annualRate: 6, termYears: 25, extraMonthly: 0, repaymentType: 'interest-only', paymentFrequency: 'biweekly' });
+    expect(result.monthlyPayment).toBeCloseTo(result.paymentPerPeriod * 26 / 12, 8);
+  });
+
   it('uses Canadian semi-annual compounding for periodic rates', () => {
     expect(periodicRate(6, 'CA')).toBeCloseTo(Math.pow(1.03, 1 / 6) - 1, 10);
     expect(paymentForFrequency(300000, 6, 25, 'CA')).toBeCloseTo(1919.42, 0);
