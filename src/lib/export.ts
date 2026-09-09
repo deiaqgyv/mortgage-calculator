@@ -1,5 +1,13 @@
 import type { AmortizationRow, MortgageInputs } from './mortgage';
 
+export interface MortgageShareInputs extends MortgageInputs {
+  usLoanProgram?: string;
+  usAnnualPropertyTax?: number;
+  usAnnualHomeInsurance?: number;
+  usMonthlyHoa?: number;
+  usAnnualFloodInsurance?: number;
+}
+
 const csvCell = (value: string | number): string => {
   const text = String(value);
   const safe = /^[=+\-@]/.test(text) ? `'${text}` : text;
@@ -12,14 +20,14 @@ export function amortizationCsv(rows: AmortizationRow[]): string {
   return [header.map(csvCell).join(','), ...body].join('\n');
 }
 
-export function encodeMortgageShare(inputs: MortgageInputs): string {
+export function encodeMortgageShare(inputs: MortgageShareInputs): string {
   return btoa(encodeURIComponent(JSON.stringify(inputs)));
 }
 
-export function decodeMortgageShare(value: string): MortgageInputs | null {
+export function decodeMortgageShare(value: string): MortgageShareInputs | null {
   try {
     const parsed: unknown = JSON.parse(decodeURIComponent(atob(value)));
     if (!parsed || typeof parsed !== 'object' || !('loanAmount' in parsed) || !('annualRate' in parsed) || !('termYears' in parsed)) return null;
-    return parsed as MortgageInputs;
+    return parsed as MortgageShareInputs;
   } catch { return null; }
 }

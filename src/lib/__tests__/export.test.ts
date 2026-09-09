@@ -10,7 +10,7 @@ describe('mortgage export and sharing', () => {
   });
 
   it('round-trips share-safe mortgage inputs without personal data', () => {
-    const inputs = { country: 'CA' as const, loanAmount: 300000, annualRate: 5, termYears: 25, extraMonthly: 100 };
+    const inputs = { country: 'US' as const, loanAmount: 300000, annualRate: 5, termYears: 25, extraMonthly: 100, usLoanProgram: 'conventional', usAnnualPropertyTax: 6000, usAnnualHomeInsurance: 1200, usMonthlyHoa: 150, usAnnualFloodInsurance: 400 };
     expect(decodeMortgageShare(encodeMortgageShare(inputs))).toEqual(inputs);
     expect(decodeMortgageShare('invalid')).toBeNull();
   });
