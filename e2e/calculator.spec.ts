@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('calculates, shares and exposes noindex metadata for a shared estimate', async ({ page }) => {
+test('calculates, shares and exposes noindex headers for a shared estimate', async ({ page }) => {
   await page.goto('/en-us/mortgage-calculator/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   const inputs = page.locator('input[type="number"]');
@@ -8,17 +8,18 @@ test('calculates, shares and exposes noindex metadata for a shared estimate', as
   await expect(page.locator('.hero-number')).toContainText('$1,847');
   await page.getByRole('button', { name: 'Copy share link' }).click();
   await expect(page).toHaveURL(/share=/);
-  await page.goto(page.url());
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+  const sharedResponse = await page.goto(page.url());
+  expect(sharedResponse?.headers()['x-robots-tag']).toBe('noindex, follow');
 });
 
 test('uses French core labels on the Canadian French route', async ({ page }) => {
   await page.goto('/fr-ca/mortgage-calculator/');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'fr-CA');
   await expect(page.locator('main')).toHaveAttribute('lang', 'fr-CA');
   await expect(page.getByText('Montant du prêt', { exact: true })).toBeVisible();
 });
 
-test('serves every indexed calculator and guidance page', async ({ page }) => {
+test('serves every indexed calculator and only the published English guidance pages', async ({ page }) => {
   const locales = ['en-us', 'en-gb', 'en-ca', 'fr-ca', 'de-de', 'fr-fr', 'es-es'];
   const articles = ['amortization', 'extra-payments', 'affordability', 'methodology', 'legal-notice', 'privacy'];
   for (const locale of locales) {
@@ -26,8 +27,8 @@ test('serves every indexed calculator and guidance page', async ({ page }) => {
     expect(calculator?.status()).toBe(200);
     for (const article of articles) {
       const response = await page.goto(`/${locale}/mortgage-calculator/${article}/`);
-      expect(response?.status()).toBe(200);
-      await expect(page.locator('article h1')).toBeVisible();
+      expect(response?.status()).toBe(locale === 'en-us' ? 200 : 404);
+      if (locale === 'en-us') await expect(page.locator('article h1')).toBeVisible();
     }
   }
 });

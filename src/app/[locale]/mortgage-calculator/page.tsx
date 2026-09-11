@@ -2,21 +2,16 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import MortgageCalculator, { type Locale } from '../../../components/mortgage-calculator';
 import { localeFaq, localeSeo } from '../../../lib/locales';
-import { isLocaleSlug, localeBySlug, mortgageCalculatorAlternates, mortgageCalculatorUrl, siteUrl, supportedLocaleSlugs } from '../../../lib/seo';
+import { isLocaleSlug, localeBySlug, mortgageCalculatorAlternates, mortgageCalculatorUrl, siteUrl } from '../../../lib/seo';
 
-export function generateStaticParams() {
-  return supportedLocaleSlugs.map((locale) => ({ locale }));
-}
-
-export function generateMetadata({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }): Promise<Metadata> {
-  return Promise.all([params, searchParams]).then(([{ locale }, query]) => {
+export function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  return params.then(({ locale }) => {
     if (!isLocaleSlug(locale)) return {};
     const seoCopy = localeSeo[localeBySlug[locale]];
     return {
     title: seoCopy.title,
     description: seoCopy.description,
     alternates: { canonical: mortgageCalculatorUrl(locale), languages: mortgageCalculatorAlternates() },
-    robots: query.share ? { index: false, follow: true } : undefined,
   }; });
 }
 

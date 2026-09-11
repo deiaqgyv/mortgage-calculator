@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { isLocaleSlug, localeBySlug, siteUrl, supportedLocaleSlugs } from '../../../../lib/seo';
+import { localeBySlug, siteUrl } from '../../../../lib/seo';
 import { taxSources } from '../../../../lib/taxes';
 
 const publishedDate = '2026-08-25';
@@ -16,16 +16,15 @@ const articles = {
 } as const;
 type ArticleSlug = keyof typeof articles;
 function isArticleSlug(value: string): value is ArticleSlug { return value in articles; }
-export function generateStaticParams() { return supportedLocaleSlugs.flatMap((locale) => Object.keys(articles).map((article) => ({ locale, article }))); }
+export function generateStaticParams() { return Object.keys(articles).map((article) => ({ locale: 'en-us', article })); }
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; article: string }> }): Promise<Metadata> {
   const { locale, article } = await params;
-  if (!isLocaleSlug(locale) || !isArticleSlug(article)) return {};
-  const isPublishedEnglishGuide = locale === 'en-us';
-  return { title: `${articles[article].title} | MortgageBreezy`, description: articles[article].description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` }, robots: isPublishedEnglishGuide ? undefined : { index: false, follow: true } };
+  if (locale !== 'en-us' || !isArticleSlug(article)) return {};
+  return { title: `${articles[article].title} | MortgageBreezy`, description: articles[article].description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` } };
 }
 export default async function ArticlePage({ params }: { params: Promise<{ locale: string; article: string }> }) {
   const { locale, article } = await params;
-  if (!isLocaleSlug(locale) || !isArticleSlug(article)) notFound();
+  if (locale !== 'en-us' || !isArticleSlug(article)) notFound();
   const page = articles[article]; const localeRoot = `/${locale}/mortgage-calculator`; const pageUrl = `${siteUrl}/${locale}/mortgage-calculator/${article}`;
   const structuredData = { '@context': 'https://schema.org', '@type': 'Article', headline: page.title, description: page.description, inLanguage: localeBySlug[locale], datePublished: publishedDate, dateModified: publishedDate, mainEntityOfPage: pageUrl, author: { '@type': 'Organization', name: 'MortgageBreezy Editorial Team', url: siteUrl }, publisher: { '@type': 'Organization', name: 'MortgageBreezy', url: siteUrl } };
   const officialSources = [taxSources.ukSdlt, taxSources.ontarioLtt, taxSources.germanyGrunderwerbsteuer, taxSources.franceDmto, taxSources.spainPropertyTaxes];
