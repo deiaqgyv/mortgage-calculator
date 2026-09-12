@@ -1,22 +1,25 @@
-# MortgageBreezy GEO analysis
+# MortgageBreezy GEO implementation
 
-Reviewed: 2026-08-25
+Analyzed and implemented: 2026-09-12
 
-## Readiness: 68/100
+## Readiness
 
-The project has server-rendered route metadata, country-specific calculator routes, structured application markup, official-source links and calculator interactivity. The main weaknesses are thin guide content, incomplete non-English copy, no named human reviewer/author credentials and no independent brand-mention evidence.
+- Directional GEO readiness: **78/100**
+- Google AI Overviews: 80/100
+- ChatGPT search: 76/100
+- Perplexity: 74/100
+- Server rendering: pass
+- AI search crawler access: GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot and PerplexityBot allowed
+- `llms.txt`: present and expanded with citation boundaries
 
-## Implemented improvements
+## Implemented
 
-- Added `/llms.txt` with primary calculators, guides, policy pages and explicit calculation limits.
-- Explicitly allowed GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot and PerplexityBot in `robots.txt`.
-- Unified schema organization and product naming as MortgageBreezy.
-- Added Article JSON-LD, publication/review dates and answer-first summaries to all guide pages.
+1. Added public editorial and calculation-review policy.
+2. Added a correction-reporting and verification policy.
+3. Replaced the unverified “Editorial Team” author label with the real publishing organization.
+4. Added stable Organization IDs, current review dates and methodology source relationships to Article schema.
+5. Added both policies to the sitemap and `llms.txt`.
 
 ## Remaining highest-impact work
 
-1. Translate all guide and calculator detail copy before treating non-English pages as equivalent hreflang alternatives.
-2. Expand each guide into an evidence-led country-specific page with dated primary-source citations; the current guide pages are too thin for competitive informational queries.
-3. Publish an editorial policy and qualified reviewer attribution for tax and mortgage rules.
-4. Obtain independent brand mentions and citations; this cannot be created safely inside the codebase.
-5. Add original comparative datasets or methodology examples to create citation-worthy first-party evidence.
+The site does not claim a licensed professional reviewer. Add Person and `reviewedBy` markup only after a real reviewer agrees to public identification and their experience can be verified. The next product-level GEO assets should be standalone amortization, extra-payment and affordability tools with server-rendered worked examples. No external brand-mention dataset was available in this implementation run.
