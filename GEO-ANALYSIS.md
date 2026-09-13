@@ -23,3 +23,9 @@ Analyzed and implemented: 2026-09-12
 ## Remaining highest-impact work
 
 The site does not claim a licensed professional reviewer. Add Person and `reviewedBy` markup only after a real reviewer agrees to public identification and their experience can be verified. The next product-level GEO assets should be standalone amortization, extra-payment and affordability tools with server-rendered worked examples. No external brand-mention dataset was available in this implementation run.
+
+## Phase 2 · 2026-09-13
+
+- Added independently understandable worked examples to amortization, extra-payment and affordability guidance.
+- Each example exposes inputs, calculation method, interpretation and exclusions without implying lender approval or guaranteed savings.
+- Updated directional readiness: **80/100**. A real interactive standalone tool remains more valuable than further generic copy.

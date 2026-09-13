@@ -18,6 +18,23 @@ const articles = {
   privacy: { title: 'Privacy notice', description: 'How MortgageBreezy processes calculator inputs, share links and basic technical data.', body: ['Calculator inputs are processed in your browser to produce an estimate. MortgageBreezy does not require an account and the calculator does not ask for your name, address, income, bank details or other financial identity information.', 'When you create a share link, the selected loan amount, rate, term and related calculator settings are encoded in the URL. Anyone who receives that URL can read those values, so do not share a link containing inputs you consider private.', 'Our hosting provider may process standard technical logs needed to deliver and protect the site, such as the requested page, request time, IP address, browser information and error data. Retention and access are governed by the hosting provider and applicable law.', 'MortgageBreezy does not currently use advertising cookies or sell calculator inputs. If analytics, advertising or other optional tracking is introduced, this notice and any required consent controls will be updated before that tracking is enabled.', 'You can clear calculator values by resetting the form, removing the share parameters from the URL or closing the page. This notice was published and reviewed on 25 August 2026.'] },
 } as const;
 type ArticleSlug = keyof typeof articles;
+const workedExamples: Partial<Record<ArticleSlug, { heading: string; steps: string[]; conclusion: string }>> = {
+  amortization: {
+    heading: 'Worked example: a $320,000 loan at 6.5% for 30 years',
+    steps: ['Loan principal: $320,000.', 'Nominal annual rate: 6.5%, divided into 12 monthly periods.', 'Term: 360 scheduled monthly payments.', 'Calculated principal-and-interest payment: approximately $2,022.62 per month.'],
+    conclusion: 'In month one, approximately $1,733.33 is interest and $289.29 reduces principal. The example excludes property tax, insurance, HOA charges, lender fees and rounding differences used by an actual lender.',
+  },
+  'extra-payments': {
+    heading: 'Worked example: adding $200 each month',
+    steps: ['Start with the same $320,000, 6.5%, 30-year fixed-rate illustration.', 'The scheduled principal-and-interest payment is approximately $2,022.62.', 'Apply an additional $200 directly to principal after each scheduled payment.', 'Recalculate later interest from the reduced outstanding balance.'],
+    conclusion: 'The exact payoff date and interest difference must be calculated from the full schedule. A lender can apply overpayments differently or charge a fee, so this is a method illustration rather than a promised saving.',
+  },
+  affordability: {
+    heading: 'Worked example: separate the housing budget',
+    steps: ['Start with principal and interest from the loan calculator.', 'Add property tax and home insurance using current local figures.', 'Add association charges, utilities and a maintenance reserve.', 'Keep closing costs and the down payment separate from recurring monthly costs.'],
+    conclusion: 'The resulting budget is more complete than a loan payment alone, but it is not an approval calculation because income, other debt, credit, stress tests and lender policy are not evaluated.',
+  },
+};
 function isArticleSlug(value: string): value is ArticleSlug { return value in articles; }
 export function generateStaticParams() { return Object.keys(articles).map((article) => ({ locale: 'en-us', article })); }
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; article: string }> }): Promise<Metadata> {
@@ -29,6 +46,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
   const { locale, article } = await params;
   if (locale !== 'en-us' || !isArticleSlug(article)) notFound();
   const page = articles[article];
+  const workedExample = workedExamples[article];
   const localeRoot = `/${locale}/mortgage-calculator`;
   const pageUrl = `${siteUrl}/${locale}/mortgage-calculator/${article}`;
   const officialSources = [taxSources.ukSdlt, taxSources.ontarioLtt, taxSources.germanyGrunderwerbsteuer, taxSources.franceDmto, taxSources.spainPropertyTaxes];
@@ -57,6 +75,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
       <h1>{page.title}</h1>
       <p className="article-summary"><strong>Short answer:</strong> {page.description}</p>
       {page.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+      {workedExample && <section className="article-sources"><h2>{workedExample.heading}</h2><ol>{workedExample.steps.map((step) => <li key={step}>{step}</li>)}</ol><p><strong>Interpretation:</strong> {workedExample.conclusion}</p></section>}
       {article === 'methodology' && <section className="article-sources"><h2>Primary sources used for local-rule data</h2><ul>{officialSources.map((source) => <li key={source.url}><a href={source.url} target="_blank" rel="noreferrer">{source.name}</a> — effective {source.effectiveFrom}; reviewed {source.reviewedAt}.</li>)}</ul></section>}
       <section className="article-sources"><h2>Editorial responsibility</h2><p>MortgageBreezy publishes these educational materials as an organization. It does not currently claim review by a licensed financial professional. Read the <Link href={`${localeRoot}/editorial-policy`}>editorial and calculation review policy</Link> or <Link href={`${localeRoot}/corrections-policy`}>report a correction</Link>.</p></section>
       <p className="article-meta">Published: {publishedDate} · Last reviewed: {reviewedDate}</p>
