@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import MortgageCalculator from '../../../../components/mortgage-calculator';
 import { localeBySlug, siteUrl } from '../../../../lib/seo';
 import { taxSources } from '../../../../lib/taxes';
 
 const publishedDate = '2026-08-25';
-const reviewedDate = '2026-09-12';
+const reviewedDate = '2026-09-13';
 
 const articles = {
   amortization: { title: 'Mortgage amortization schedule with extra payments', description: 'Learn how a mortgage amortization schedule splits principal and interest and how extra payments change the remaining balance and payoff date.', body: ['An amortization schedule lists every planned payment. Each row shows the opening balance, interest for that period, principal repaid, any extra principal and the remaining balance. It is the clearest way to understand why a loan with the same monthly payment can have a very different interest cost when its term or rate changes.', 'For a fixed-rate repayment mortgage, interest is calculated from the balance at the start of a payment period. Early in the term, that balance is larger, so more of each scheduled payment goes to interest. As principal falls, the interest portion generally falls and the principal portion rises. The final payment is adjusted so the balance does not become negative.', 'Use the calculator schedule as an illustrative cash-flow model. Actual lender schedules can differ because of daily interest, payment dates, escrow, product fees, rate changes or contractual rounding.'] },
@@ -18,6 +19,12 @@ const articles = {
   privacy: { title: 'Privacy notice', description: 'How MortgageBreezy processes calculator inputs, share links and basic technical data.', body: ['Calculator inputs are processed in your browser to produce an estimate. MortgageBreezy does not require an account and the calculator does not ask for your name, address, income, bank details or other financial identity information.', 'When you create a share link, the selected loan amount, rate, term and related calculator settings are encoded in the URL. Anyone who receives that URL can read those values, so do not share a link containing inputs you consider private.', 'Our hosting provider may process standard technical logs needed to deliver and protect the site, such as the requested page, request time, IP address, browser information and error data. Retention and access are governed by the hosting provider and applicable law.', 'MortgageBreezy does not currently use advertising cookies or sell calculator inputs. If analytics, advertising or other optional tracking is introduced, this notice and any required consent controls will be updated before that tracking is enabled.', 'You can clear calculator values by resetting the form, removing the share parameters from the URL or closing the page. This notice was published and reviewed on 25 August 2026.'] },
 } as const;
 type ArticleSlug = keyof typeof articles;
+const focusedTools = {
+  'amortization-calculator': { title: 'Mortgage amortization calculator with full schedule', description: 'Calculate a complete mortgage amortization schedule and see how each payment splits between principal, interest and remaining balance.', heading: 'Mortgage amortization calculator', intro: 'Enter the loan amount, rate and term to calculate the payment and inspect every period of the amortization schedule. Taxes, insurance and lender-specific rounding remain separate.' },
+  'extra-payment-calculator': { title: 'Extra mortgage payment calculator', description: 'Compare a base mortgage with additional monthly principal and estimate interest saved and payoff time.', heading: 'Extra mortgage payment calculator', intro: 'Enter your current balance, rate and remaining term, then add a monthly principal payment. Compare estimated interest and payoff time while checking lender overpayment rules separately.' },
+} as const;
+type FocusedToolSlug = keyof typeof focusedTools;
+function isFocusedToolSlug(value: string): value is FocusedToolSlug { return value in focusedTools; }
 const workedExamples: Partial<Record<ArticleSlug, { heading: string; steps: string[]; conclusion: string }>> = {
   amortization: {
     heading: 'Worked example: a $320,000 loan at 6.5% for 30 years',
@@ -36,15 +43,24 @@ const workedExamples: Partial<Record<ArticleSlug, { heading: string; steps: stri
   },
 };
 function isArticleSlug(value: string): value is ArticleSlug { return value in articles; }
-export function generateStaticParams() { return Object.keys(articles).map((article) => ({ locale: 'en-us', article })); }
+export function generateStaticParams() { return [...Object.keys(articles), ...Object.keys(focusedTools)].map((article) => ({ locale: 'en-us', article })); }
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; article: string }> }): Promise<Metadata> {
   const { locale, article } = await params;
-  if (locale !== 'en-us' || !isArticleSlug(article)) return {};
-  return { title: `${articles[article].title} | MortgageBreezy`, description: articles[article].description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` } };
+  if (locale !== 'en-us') return {};
+  const page = isFocusedToolSlug(article) ? focusedTools[article] : isArticleSlug(article) ? articles[article] : undefined;
+  if (!page) return {};
+  return { title: `${page.title} | MortgageBreezy`, description: page.description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` } };
 }
 export default async function ArticlePage({ params }: { params: Promise<{ locale: string; article: string }> }) {
   const { locale, article } = await params;
-  if (locale !== 'en-us' || !isArticleSlug(article)) notFound();
+  if (locale !== 'en-us') notFound();
+  if (isFocusedToolSlug(article)) {
+    const tool = focusedTools[article];
+    const pageUrl = `${siteUrl}/${locale}/mortgage-calculator/${article}`;
+    const structuredData = { '@context': 'https://schema.org', '@type': ['WebApplication', 'WebPage'], name: tool.heading, description: tool.description, url: pageUrl, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', isAccessibleForFree: true, inLanguage: 'en-US', dateModified: reviewedDate, provider: { '@id': `${siteUrl}/#organization` } };
+    return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><MortgageCalculator locale="en-US" heading={tool.heading} intro={tool.intro} /></>;
+  }
+  if (!isArticleSlug(article)) notFound();
   const page = articles[article];
   const workedExample = workedExamples[article];
   const localeRoot = `/${locale}/mortgage-calculator`;

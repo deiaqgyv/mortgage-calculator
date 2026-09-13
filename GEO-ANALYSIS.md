@@ -29,3 +29,10 @@ The site does not claim a licensed professional reviewer. Add Person and `review
 - Added independently understandable worked examples to amortization, extra-payment and affordability guidance.
 - Each example exposes inputs, calculation method, interpretation and exclusions without implying lender approval or guaranteed savings.
 - Updated directional readiness: **80/100**. A real interactive standalone tool remains more valuable than further generic copy.
+
+## Phase 3 · 2026-09-13
+
+- Added dedicated interactive amortization and extra-payment calculator URLs with focused title, description, H1 and introductory answer.
+- Reused the tested calculation engine instead of cloning financial formulas into separate implementations.
+- Added both tools to the sitemap and `llms.txt`.
+- Updated directional readiness: **85/100**. A true income/debt affordability engine remains outstanding and must not be implied by the current checklist.
