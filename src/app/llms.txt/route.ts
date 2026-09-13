@@ -16,6 +16,7 @@ ${localeLinks}
 ## Guides and worked examples
 - [Amortization calculator](${primary}amortization-calculator/): Interactive full payment schedule with principal, interest and balance by period.
 - [Extra payment calculator](${primary}extra-payment-calculator/): Interactive comparison of base payments and additional monthly principal.
+- [Mortgage affordability calculator](${primary}affordability-calculator/): Interactive home-price scenario using income, debts, recurring ownership costs and editable ratio assumptions; not a lender approval.
 - [Mortgage amortization](${primary}amortization/): How scheduled payments split into principal and interest, with an explicit 30-year worked example.
 - [Extra mortgage payments](${primary}extra-payments/): How additional principal can reduce interest and payoff time, including method and lender-policy limits.
 - [Mortgage affordability checklist](${primary}affordability/): Costs to consider beyond a loan payment and what the site does not assess.

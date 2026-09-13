@@ -36,3 +36,10 @@ The site does not claim a licensed professional reviewer. Add Person and `review
 - Reused the tested calculation engine instead of cloning financial formulas into separate implementations.
 - Added both tools to the sitemap and `llms.txt`.
 - Updated directional readiness: **85/100**. A true income/debt affordability engine remains outstanding and must not be implied by the current checklist.
+
+## Phase 4 · 2026-09-13
+
+- Added a dedicated interactive affordability calculator using income, debts, down payment, property tax, insurance, HOA and editable ratio assumptions.
+- Published the reverse-annuity method, component budgets and explicit exclusions beside the result.
+- Labels every result as an educational scenario, not lender approval, prequalification or a universal underwriting limit.
+- Updated directional readiness: **89/100**. A real licensed reviewer remains unavailable and must not be fabricated.

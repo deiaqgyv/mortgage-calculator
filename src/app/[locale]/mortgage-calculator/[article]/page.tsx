@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import MortgageCalculator from '../../../../components/mortgage-calculator';
+import AffordabilityCalculator from '../../../../components/affordability-calculator';
 import { localeBySlug, siteUrl } from '../../../../lib/seo';
 import { taxSources } from '../../../../lib/taxes';
 
@@ -22,6 +23,7 @@ type ArticleSlug = keyof typeof articles;
 const focusedTools = {
   'amortization-calculator': { title: 'Mortgage amortization calculator with full schedule', description: 'Calculate a complete mortgage amortization schedule and see how each payment splits between principal, interest and remaining balance.', heading: 'Mortgage amortization calculator', intro: 'Enter the loan amount, rate and term to calculate the payment and inspect every period of the amortization schedule. Taxes, insurance and lender-specific rounding remain separate.' },
   'extra-payment-calculator': { title: 'Extra mortgage payment calculator', description: 'Compare a base mortgage with additional monthly principal and estimate interest saved and payoff time.', heading: 'Extra mortgage payment calculator', intro: 'Enter your current balance, rate and remaining term, then add a monthly principal payment. Compare estimated interest and payoff time while checking lender overpayment rules separately.' },
+  'affordability-calculator': { title: 'Mortgage affordability calculator', description: 'Estimate an educational home-price scenario from income, debts, down payment, ownership costs and adjustable debt-to-income assumptions.', heading: 'Mortgage affordability calculator', intro: 'Estimate a planning scenario from income, debts and recurring costs. This is not a lender approval or prequalification.' },
 } as const;
 type FocusedToolSlug = keyof typeof focusedTools;
 function isFocusedToolSlug(value: string): value is FocusedToolSlug { return value in focusedTools; }
@@ -58,7 +60,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
     const tool = focusedTools[article];
     const pageUrl = `${siteUrl}/${locale}/mortgage-calculator/${article}`;
     const structuredData = { '@context': 'https://schema.org', '@type': ['WebApplication', 'WebPage'], name: tool.heading, description: tool.description, url: pageUrl, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', isAccessibleForFree: true, inLanguage: 'en-US', dateModified: reviewedDate, provider: { '@id': `${siteUrl}/#organization` } };
-    return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} /><MortgageCalculator locale="en-US" heading={tool.heading} intro={tool.intro} /></>;
+    return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{article === 'affordability-calculator' ? <AffordabilityCalculator /> : <MortgageCalculator locale="en-US" heading={tool.heading} intro={tool.intro} />}</>;
   }
   if (!isArticleSlug(article)) notFound();
   const page = articles[article];
