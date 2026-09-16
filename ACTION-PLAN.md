@@ -35,7 +35,7 @@
 ### 加拿大
 
 - [x] 建 accelerated biweekly 对比页。
-- [ ] 补 CMHC insurance、GDS/TDS affordability；引用 FCAC/CMHC 官方来源。
+- [x] 补 CMHC insurance、GDS/TDS affordability；引用 CMHC 保费表与 OSFI B-20 对投保按揭 39%/44% 的说明。未建模省销售税、Sagen/Canada Guaranty 或具名借款人资格。
 
 验收：每个市场至少有 1 个 hub + 2 个真正独立的专项工具；本地术语、规则、来源、FAQ 均不是机械翻译。
 

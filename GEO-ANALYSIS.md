@@ -47,4 +47,5 @@ The site does not claim a licensed professional reviewer. Add Person and `review
 - Extra-payment calculator now supports recurring monthly, annual, one-time lump sum, and start/end periods.
 - Added a UK overpayment calculator URL for England, Scotland and Wales transaction-tax contexts.
 - Added a Canadian accelerated-biweekly comparison URL using monthly, biweekly and accelerated-biweekly schedules.
-- Updated directional readiness: **91/100**. A licensed reviewer remains unavailable and must not be fabricated.
+- Added a Canadian GDS/TDS and CMHC premium calculator with insured 39%/44% markers and the published homeowner premium schedule.
+- Updated directional readiness: **92/100**. A licensed reviewer remains unavailable and must not be fabricated.

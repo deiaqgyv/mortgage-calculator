@@ -33,8 +33,8 @@ export const calculationDataByCountry: Record<CountryCode, CalculationData> = {
     applicability: 'Canadian quoted rates with supported provincial transfer-tax or land-registry fee rules.',
     formula: 'Semi-annual compounding conversion to the selected payment frequency.',
     rounding: 'Calculations retain precision; displayed currency is rounded to whole Canadian dollars.',
-    included: 'Principal, interest, optional extra payments and supported provincial tax or registration-fee estimates.',
-    excluded: 'Mortgage default insurance premiums, lender fees, local fees without stable formulas and Nunavut registration costs.',
+    included: 'Principal, interest, optional extra payments, supported provincial tax or registration-fee estimates and a high-ratio CMHC premium illustration.',
+    excluded: 'Provincial sales tax on insurance premiums, lender fees, local fees without stable formulas, Nunavut registration costs and insurer eligibility decisions.',
   },
   DE: {
     version: 'DE-2026.08', effectiveFrom: '2025-01-01', reviewedAt: '2026-08-25',

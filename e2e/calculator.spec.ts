@@ -28,6 +28,10 @@ test('publishes UK overpayment and Canadian accelerated-biweekly tools', async (
   expect(canada?.status()).toBe(200);
   await expect(page.getByRole('heading', { level: 1, name: 'Canadian accelerated biweekly mortgage calculator' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Monthly, biweekly and accelerated biweekly' })).toBeVisible();
+  const gds = await page.goto('/en-ca/mortgage-calculator/gds-tds-calculator/');
+  expect(gds?.status()).toBe(200);
+  await expect(page.getByRole('heading', { level: 1, name: 'Canadian GDS, TDS and CMHC calculator' })).toBeVisible();
+  await expect(page.getByText('CMHC premium', { exact: true })).toBeVisible();
 });
 
 test('serves every indexed calculator and only the published English guidance pages', async ({ page }) => {

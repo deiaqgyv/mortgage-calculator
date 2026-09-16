@@ -18,6 +18,7 @@ ${localeLinks}
 - [Extra payment calculator](${primary}extra-payment-calculator/): Interactive comparison of monthly, annual and one-time extra principal, with optional start and end periods.
 - [UK mortgage overpayment calculator](${siteUrl}/en-gb/mortgage-calculator/overpayment-calculator/): UK overpayment illustration with extra payment types; SDLT, LBTT and LTT remain separate.
 - [Canadian accelerated biweekly calculator](${siteUrl}/en-ca/mortgage-calculator/accelerated-biweekly-calculator/): Monthly, biweekly and accelerated-biweekly comparison using Canadian semi-annual compounding.
+- [Canadian GDS, TDS and CMHC calculator](${siteUrl}/en-ca/mortgage-calculator/gds-tds-calculator/): Educational Gross Debt Service, Total Debt Service and high-ratio CMHC premium illustration; not a lender or insurer decision.
 - [Mortgage affordability calculator](${primary}affordability-calculator/): Interactive home-price scenario using income, debts, recurring ownership costs and editable ratio assumptions; not a lender approval.
 - [Mortgage amortization](${primary}amortization/): How scheduled payments split into principal and interest, with an explicit 30-year worked example.
 - [Extra mortgage payments](${primary}extra-payments/): How additional principal can reduce interest and payoff time, including method and lender-policy limits.

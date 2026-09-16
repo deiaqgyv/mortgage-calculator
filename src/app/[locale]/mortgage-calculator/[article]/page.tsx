@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import MortgageCalculator from '../../../../components/mortgage-calculator';
 import AffordabilityCalculator from '../../../../components/affordability-calculator';
+import CanadaAffordabilityCalculator from '../../../../components/canada-affordability-calculator';
 import { localeBySlug, siteUrl } from '../../../../lib/seo';
 import { taxSources } from '../../../../lib/taxes';
 
@@ -26,6 +27,7 @@ const focusedTools = {
   'affordability-calculator': { title: 'Mortgage affordability calculator', description: 'Estimate an educational home-price scenario from income, debts, down payment, ownership costs and adjustable debt-to-income assumptions.', heading: 'Mortgage affordability calculator', intro: 'Estimate a planning scenario from income, debts and recurring costs. This is not a lender approval or prequalification.', locale: 'en-us' as const },
   'overpayment-calculator': { title: 'UK mortgage overpayment calculator', description: 'Estimate how monthly, annual or lump-sum UK mortgage overpayments can reduce interest, subject to lender allowances and early repayment charges.', heading: 'UK mortgage overpayment calculator', intro: 'Model overpayments against a UK repayment mortgage. SDLT, LBTT and LTT remain separate transaction-cost estimates, not part of the loan payment.', locale: 'en-gb' as const },
   'accelerated-biweekly-calculator': { title: 'Canadian accelerated biweekly mortgage calculator', description: 'Compare monthly, biweekly and accelerated-biweekly Canadian payments using semi-annual compounding and an educational extra-payment illustration.', heading: 'Canadian accelerated biweekly mortgage calculator', intro: 'Compare payment frequencies using the Canadian quoted-rate convention. Accelerated biweekly approximates one extra monthly payment each year and is not a lender quote.', locale: 'en-ca' as const },
+  'gds-tds-calculator': { title: 'Canadian GDS, TDS and CMHC calculator', description: 'Estimate Canadian Gross Debt Service, Total Debt Service and a high-ratio CMHC premium using insured-mortgage planning limits.', heading: 'Canadian GDS, TDS and CMHC calculator', intro: 'Estimate GDS, TDS and CMHC insurance for a Canadian purchase scenario. This is not a lender approval or insurer decision.', locale: 'en-ca' as const },
 } as const;
 type FocusedToolSlug = keyof typeof focusedTools;
 function isFocusedToolSlug(value: string): value is FocusedToolSlug { return value in focusedTools; }
@@ -68,7 +70,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
     const pageUrl = `${siteUrl}/${locale}/mortgage-calculator/${article}`;
     const structuredData = { '@context': 'https://schema.org', '@type': ['WebApplication', 'WebPage'], name: tool.heading, description: tool.description, url: pageUrl, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', isAccessibleForFree: true, inLanguage: localeBySlug[locale as keyof typeof localeBySlug], dateModified: reviewedDate, provider: { '@id': `${siteUrl}/#organization` } };
     const localeCode = localeBySlug[locale as keyof typeof localeBySlug];
-    return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{article === 'affordability-calculator' ? <AffordabilityCalculator /> : <MortgageCalculator locale={localeCode} heading={tool.heading} intro={tool.intro} extraPaymentModes={article === 'extra-payment-calculator' || article === 'overpayment-calculator'} defaultFrequency={article === 'accelerated-biweekly-calculator' ? 'accelerated-biweekly' : 'monthly'} frequencyComparison={article === 'accelerated-biweekly-calculator'} />}</>;
+    return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{article === 'affordability-calculator' ? <AffordabilityCalculator /> : article === 'gds-tds-calculator' ? <CanadaAffordabilityCalculator /> : <MortgageCalculator locale={localeCode} heading={tool.heading} intro={tool.intro} extraPaymentModes={article === 'extra-payment-calculator' || article === 'overpayment-calculator'} defaultFrequency={article === 'accelerated-biweekly-calculator' ? 'accelerated-biweekly' : 'monthly'} frequencyComparison={article === 'accelerated-biweekly-calculator'} />}</>;
   }
   if (locale !== 'en-us') notFound();
   if (!isArticleSlug(article)) notFound();
