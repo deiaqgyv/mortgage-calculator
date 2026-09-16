@@ -15,7 +15,9 @@ ${localeLinks}
 
 ## Guides and worked examples
 - [Amortization calculator](${primary}amortization-calculator/): Interactive full payment schedule with principal, interest and balance by period.
-- [Extra payment calculator](${primary}extra-payment-calculator/): Interactive comparison of base payments and additional monthly principal.
+- [Extra payment calculator](${primary}extra-payment-calculator/): Interactive comparison of monthly, annual and one-time extra principal, with optional start and end periods.
+- [UK mortgage overpayment calculator](${siteUrl}/en-gb/mortgage-calculator/overpayment-calculator/): UK overpayment illustration with extra payment types; SDLT, LBTT and LTT remain separate.
+- [Canadian accelerated biweekly calculator](${siteUrl}/en-ca/mortgage-calculator/accelerated-biweekly-calculator/): Monthly, biweekly and accelerated-biweekly comparison using Canadian semi-annual compounding.
 - [Mortgage affordability calculator](${primary}affordability-calculator/): Interactive home-price scenario using income, debts, recurring ownership costs and editable ratio assumptions; not a lender approval.
 - [Mortgage amortization](${primary}amortization/): How scheduled payments split into principal and interest, with an explicit 30-year worked example.
 - [Extra mortgage payments](${primary}extra-payments/): How additional principal can reduce interest and payoff time, including method and lender-policy limits.
@@ -29,7 +31,7 @@ ${localeLinks}
 - Calculations run in the browser; share links encode the selected inputs in the URL.
 - Country and transaction-cost rules show their effective date and review date in the calculator.
 - Content is published by MortgageBreezy as an organization. The site does not currently claim review by a licensed mortgage, legal, tax or financial professional.
-- Guides were last reviewed on 2026-09-13. Local-rule records display their own effective and review dates.
+- Guides were last reviewed on 2026-09-16. Local-rule records display their own effective and review dates.
 - Verify current rates, eligibility and fees with a lender and relevant local authority before relying on an estimate.
 
 ## Citation guidance

@@ -19,6 +19,17 @@ test('uses French core labels on the Canadian French route', async ({ page }) =>
   await expect(page.getByText('Montant du prêt', { exact: true })).toBeVisible();
 });
 
+test('publishes UK overpayment and Canadian accelerated-biweekly tools', async ({ page }) => {
+  const uk = await page.goto('/en-gb/mortgage-calculator/overpayment-calculator/');
+  expect(uk?.status()).toBe(200);
+  await expect(page.getByRole('heading', { level: 1, name: 'UK mortgage overpayment calculator' })).toBeVisible();
+  await expect(page.getByText('Annual extra payment', { exact: true })).toBeVisible();
+  const canada = await page.goto('/en-ca/mortgage-calculator/accelerated-biweekly-calculator/');
+  expect(canada?.status()).toBe(200);
+  await expect(page.getByRole('heading', { level: 1, name: 'Canadian accelerated biweekly mortgage calculator' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Monthly, biweekly and accelerated biweekly' })).toBeVisible();
+});
+
 test('serves every indexed calculator and only the published English guidance pages', async ({ page }) => {
   const locales = ['en-us', 'en-gb', 'en-ca', 'fr-ca', 'de-de', 'fr-fr', 'es-es'];
   const articles = ['amortization', 'extra-payments', 'affordability', 'methodology', 'legal-notice', 'privacy'];

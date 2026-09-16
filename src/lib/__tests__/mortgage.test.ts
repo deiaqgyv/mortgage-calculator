@@ -19,6 +19,31 @@ describe('mortgage calculations', () => {
     expect(result.monthsSaved).toBeGreaterThan(0);
   });
 
+  it('applies a one-time lump sum on the selected period', () => {
+    const monthly = calculateMortgage({ loanAmount: 300000, annualRate: 6, termYears: 30, extraMonthly: 0 });
+    const lump = calculateMortgage({ loanAmount: 300000, annualRate: 6, termYears: 30, extraMonthly: 0, extraLumpSum: 20000, extraLumpPeriod: 1 });
+    expect(lump.schedule[0]?.extraPayment).toBeCloseTo(20000, 8);
+    expect(lump.interestSaved).toBeGreaterThan(0);
+    expect(lump.totalInterest).toBeLessThan(monthly.totalInterest);
+  });
+
+  it('applies an annual extra payment once per year', () => {
+    const result = calculateMortgage({ loanAmount: 300000, annualRate: 6, termYears: 30, extraMonthly: 0, extraAnnual: 5000 });
+    const annualRows = result.schedule.filter((row) => row.extraPayment > 0);
+    expect(annualRows[0]?.period).toBe(12);
+    expect(annualRows[0]?.extraPayment).toBeCloseTo(5000, 8);
+    expect(annualRows[1]?.period).toBe(24);
+    expect(result.interestSaved).toBeGreaterThan(0);
+  });
+
+  it('limits recurring extra payments to a start and end period', () => {
+    const result = calculateMortgage({ loanAmount: 300000, annualRate: 6, termYears: 30, extraMonthly: 300, extraStartPeriod: 13, extraEndPeriod: 24 });
+    expect(result.schedule[11]?.extraPayment).toBe(0);
+    expect(result.schedule[12]?.extraPayment).toBeCloseTo(300, 8);
+    expect(result.schedule[23]?.extraPayment).toBeCloseTo(300, 8);
+    expect(result.schedule[24]?.extraPayment).toBe(0);
+  });
+
   it('reports the actual interest-only payment', () => {
     const result = calculateMortgage({ loanAmount: 360000, annualRate: 7, termYears: 30, extraMonthly: 0, repaymentType: 'interest-only' });
     expect(result.monthlyPayment).toBeCloseTo(2100, 8);

@@ -21,9 +21,11 @@ const articles = {
 } as const;
 type ArticleSlug = keyof typeof articles;
 const focusedTools = {
-  'amortization-calculator': { title: 'Mortgage amortization calculator with full schedule', description: 'Calculate a complete mortgage amortization schedule and see how each payment splits between principal, interest and remaining balance.', heading: 'Mortgage amortization calculator', intro: 'Enter the loan amount, rate and term to calculate the payment and inspect every period of the amortization schedule. Taxes, insurance and lender-specific rounding remain separate.' },
-  'extra-payment-calculator': { title: 'Extra mortgage payment calculator', description: 'Compare a base mortgage with additional monthly principal and estimate interest saved and payoff time.', heading: 'Extra mortgage payment calculator', intro: 'Enter your current balance, rate and remaining term, then add a monthly principal payment. Compare estimated interest and payoff time while checking lender overpayment rules separately.' },
-  'affordability-calculator': { title: 'Mortgage affordability calculator', description: 'Estimate an educational home-price scenario from income, debts, down payment, ownership costs and adjustable debt-to-income assumptions.', heading: 'Mortgage affordability calculator', intro: 'Estimate a planning scenario from income, debts and recurring costs. This is not a lender approval or prequalification.' },
+  'amortization-calculator': { title: 'Mortgage amortization calculator with full schedule', description: 'Calculate a complete mortgage amortization schedule and see how each payment splits between principal, interest and remaining balance.', heading: 'Mortgage amortization calculator', intro: 'Enter the loan amount, rate and term to calculate the payment and inspect every period of the amortization schedule. Taxes, insurance and lender-specific rounding remain separate.', locale: 'en-us' as const },
+  'extra-payment-calculator': { title: 'Extra mortgage payment calculator', description: 'Compare a base mortgage with monthly, annual and one-time extra principal and estimate interest saved and payoff time.', heading: 'Extra mortgage payment calculator', intro: 'Enter your current balance, rate and remaining term, then add monthly, annual or one-time principal. Compare estimated interest and payoff time while checking lender overpayment rules separately.', locale: 'en-us' as const },
+  'affordability-calculator': { title: 'Mortgage affordability calculator', description: 'Estimate an educational home-price scenario from income, debts, down payment, ownership costs and adjustable debt-to-income assumptions.', heading: 'Mortgage affordability calculator', intro: 'Estimate a planning scenario from income, debts and recurring costs. This is not a lender approval or prequalification.', locale: 'en-us' as const },
+  'overpayment-calculator': { title: 'UK mortgage overpayment calculator', description: 'Estimate how monthly, annual or lump-sum UK mortgage overpayments can reduce interest, subject to lender allowances and early repayment charges.', heading: 'UK mortgage overpayment calculator', intro: 'Model overpayments against a UK repayment mortgage. SDLT, LBTT and LTT remain separate transaction-cost estimates, not part of the loan payment.', locale: 'en-gb' as const },
+  'accelerated-biweekly-calculator': { title: 'Canadian accelerated biweekly mortgage calculator', description: 'Compare monthly, biweekly and accelerated-biweekly Canadian payments using semi-annual compounding and an educational extra-payment illustration.', heading: 'Canadian accelerated biweekly mortgage calculator', intro: 'Compare payment frequencies using the Canadian quoted-rate convention. Accelerated biweekly approximates one extra monthly payment each year and is not a lender quote.', locale: 'en-ca' as const },
 } as const;
 type FocusedToolSlug = keyof typeof focusedTools;
 function isFocusedToolSlug(value: string): value is FocusedToolSlug { return value in focusedTools; }
@@ -45,23 +47,30 @@ const workedExamples: Partial<Record<ArticleSlug, { heading: string; steps: stri
   },
 };
 function isArticleSlug(value: string): value is ArticleSlug { return value in articles; }
-export function generateStaticParams() { return [...Object.keys(articles), ...Object.keys(focusedTools)].map((article) => ({ locale: 'en-us', article })); }
+export function generateStaticParams() {
+  return Object.entries(focusedTools).map(([article, tool]) => ({ locale: tool.locale, article }))
+    .concat(Object.keys(articles).map((article) => ({ locale: 'en-us', article })));
+}
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; article: string }> }): Promise<Metadata> {
   const { locale, article } = await params;
+  const tool = isFocusedToolSlug(article) ? focusedTools[article] : undefined;
+  if (tool && locale === tool.locale) return { title: `${tool.title} | MortgageBreezy`, description: tool.description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` } };
   if (locale !== 'en-us') return {};
-  const page = isFocusedToolSlug(article) ? focusedTools[article] : isArticleSlug(article) ? articles[article] : undefined;
+  const page = isArticleSlug(article) ? articles[article] : undefined;
   if (!page) return {};
   return { title: `${page.title} | MortgageBreezy`, description: page.description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` } };
 }
 export default async function ArticlePage({ params }: { params: Promise<{ locale: string; article: string }> }) {
   const { locale, article } = await params;
-  if (locale !== 'en-us') notFound();
   if (isFocusedToolSlug(article)) {
     const tool = focusedTools[article];
+    if (locale !== tool.locale) notFound();
     const pageUrl = `${siteUrl}/${locale}/mortgage-calculator/${article}`;
-    const structuredData = { '@context': 'https://schema.org', '@type': ['WebApplication', 'WebPage'], name: tool.heading, description: tool.description, url: pageUrl, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', isAccessibleForFree: true, inLanguage: 'en-US', dateModified: reviewedDate, provider: { '@id': `${siteUrl}/#organization` } };
-    return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{article === 'affordability-calculator' ? <AffordabilityCalculator /> : <MortgageCalculator locale="en-US" heading={tool.heading} intro={tool.intro} />}</>;
+    const structuredData = { '@context': 'https://schema.org', '@type': ['WebApplication', 'WebPage'], name: tool.heading, description: tool.description, url: pageUrl, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', isAccessibleForFree: true, inLanguage: localeBySlug[locale as keyof typeof localeBySlug], dateModified: reviewedDate, provider: { '@id': `${siteUrl}/#organization` } };
+    const localeCode = localeBySlug[locale as keyof typeof localeBySlug];
+    return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{article === 'affordability-calculator' ? <AffordabilityCalculator /> : <MortgageCalculator locale={localeCode} heading={tool.heading} intro={tool.intro} extraPaymentModes={article === 'extra-payment-calculator' || article === 'overpayment-calculator'} defaultFrequency={article === 'accelerated-biweekly-calculator' ? 'accelerated-biweekly' : 'monthly'} frequencyComparison={article === 'accelerated-biweekly-calculator'} />}</>;
   }
+  if (locale !== 'en-us') notFound();
   if (!isArticleSlug(article)) notFound();
   const page = articles[article];
   const workedExample = workedExamples[article];
@@ -73,7 +82,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
     '@type': 'Article',
     headline: page.title,
     description: page.description,
-    inLanguage: localeBySlug[locale],
+    inLanguage: localeBySlug['en-us'],
     datePublished: publishedDate,
     dateModified: reviewedDate,
     mainEntityOfPage: pageUrl,

@@ -8,6 +8,11 @@ export type MortgageInputs = {
   annualRate: number;
   termYears: number;
   extraMonthly: number;
+  extraAnnual?: number;
+  extraLumpSum?: number;
+  extraLumpPeriod?: number;
+  extraStartPeriod?: number;
+  extraEndPeriod?: number;
   paymentFrequency?: PaymentFrequency;
   repaymentType?: RepaymentType;
   annualMortgageInsurance?: number;
@@ -49,16 +54,26 @@ export function ukSdltEstimate(propertyValue: number, firstTimeBuyer = false, ad
   return tax;
 }
 
-function buildSchedule(inputs: MortgageInputs, extraMonthly: number): MortgageResult {
+function extraPrincipalForPeriod(inputs: MortgageInputs, period: number, paymentsPerYear: number): number {
+  const start = Math.max(1, inputs.extraStartPeriod ?? 1);
+  const end = inputs.extraEndPeriod && inputs.extraEndPeriod > 0 ? inputs.extraEndPeriod : Number.POSITIVE_INFINITY;
+  let extra = 0;
+  if (period >= start && period <= end) extra += Math.max(0, inputs.extraMonthly) * 12 / paymentsPerYear;
+  if ((inputs.extraAnnual ?? 0) > 0 && period % paymentsPerYear === 0) extra += Math.max(0, inputs.extraAnnual ?? 0);
+  if ((inputs.extraLumpSum ?? 0) > 0 && period === Math.max(1, Math.round(inputs.extraLumpPeriod ?? 1))) extra += Math.max(0, inputs.extraLumpSum ?? 0);
+  return extra;
+}
+
+function buildSchedule(inputs: MortgageInputs): MortgageResult {
   const country = inputs.country ?? 'US'; const frequency = inputs.paymentFrequency ?? 'monthly';
   const paymentsPerYear = frequency === 'semi-monthly' ? 24 : frequency === 'biweekly' || frequency === 'accelerated-biweekly' ? 26 : frequency === 'weekly' || frequency === 'accelerated-weekly' ? 52 : 12;
   const repaymentPeriodPayment = paymentForFrequency(inputs.loanAmount, inputs.annualRate, inputs.termYears, country, frequency); const baseMonthly = monthlyPayment(inputs.loanAmount, inputs.annualRate, inputs.termYears, country); const rate = periodicRate(inputs.annualRate, country, frequency);
-  const maxPeriods = Math.max(1, Math.round(inputs.termYears * paymentsPerYear)); const interestOnly = inputs.repaymentType === 'interest-only'; const extraPerPeriod = Math.max(0, extraMonthly) * 12 / paymentsPerYear;
+  const maxPeriods = Math.max(1, Math.round(inputs.termYears * paymentsPerYear)); const interestOnly = inputs.repaymentType === 'interest-only';
   const periodPayment = interestOnly ? inputs.loanAmount * rate : repaymentPeriodPayment;
   const displayedMonthlyPayment = interestOnly ? periodPayment * paymentsPerYear / 12 : baseMonthly;
   let balance = inputs.loanAmount; let totalInterest = 0; let totalPaid = 0; let totalMortgageInsurance = 0; const schedule: AmortizationRow[] = [];
   for (let period = 1; period <= maxPeriods && balance > 0.005; period += 1) {
-    const interest = balance * rate; const scheduled = interestOnly ? interest : Math.min(periodPayment, balance + interest); const extraPayment = Math.min(extraPerPeriod, Math.max(0, balance + interest - scheduled)); const principal = interestOnly ? 0 : Math.min(balance, scheduled - interest); const mortgageInsurance = inputs.annualMortgageInsurance ? inputs.annualMortgageInsurance / paymentsPerYear : 0;
+    const interest = balance * rate; const scheduled = interestOnly ? interest : Math.min(periodPayment, balance + interest); const extraPayment = Math.min(extraPrincipalForPeriod(inputs, period, paymentsPerYear), Math.max(0, balance + interest - scheduled)); const principal = interestOnly ? 0 : Math.min(balance, scheduled - interest); const mortgageInsurance = inputs.annualMortgageInsurance ? inputs.annualMortgageInsurance / paymentsPerYear : 0;
     balance = Math.max(0, balance - principal - extraPayment); const payment = scheduled + extraPayment; totalInterest += interest; totalPaid += payment + mortgageInsurance; totalMortgageInsurance += mortgageInsurance; schedule.push({ period, payment, principal, interest, extraPayment, mortgageInsurance, balance });
   }
   const fixedPeriod = inputs.fixedPeriodYears ? Math.round(inputs.fixedPeriodYears * paymentsPerYear) : undefined;
@@ -66,6 +81,8 @@ function buildSchedule(inputs: MortgageInputs, extraMonthly: number): MortgageRe
 }
 
 export function calculateMortgage(inputs: MortgageInputs): MortgageResult {
-  const base = buildSchedule({ ...inputs, repaymentType: inputs.repaymentType ?? 'repayment' }, 0); const withExtra = buildSchedule({ ...inputs, repaymentType: inputs.repaymentType ?? 'repayment' }, inputs.extraMonthly);
+  const repaymentType = inputs.repaymentType ?? 'repayment';
+  const base = buildSchedule({ ...inputs, repaymentType, extraMonthly: 0, extraAnnual: 0, extraLumpSum: 0 });
+  const withExtra = buildSchedule({ ...inputs, repaymentType });
   return { ...withExtra, interestSaved: Math.max(0, base.totalInterest - withExtra.totalInterest), monthsSaved: Math.max(0, base.payoffMonths - withExtra.payoffMonths) };
 }

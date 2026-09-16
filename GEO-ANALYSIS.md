@@ -42,4 +42,9 @@ The site does not claim a licensed professional reviewer. Add Person and `review
 - Added a dedicated interactive affordability calculator using income, debts, down payment, property tax, insurance, HOA and editable ratio assumptions.
 - Published the reverse-annuity method, component budgets and explicit exclusions beside the result.
 - Labels every result as an educational scenario, not lender approval, prequalification or a universal underwriting limit.
-- Updated directional readiness: **89/100**. A real licensed reviewer remains unavailable and must not be fabricated.
+## Phase 5 · 2026-09-16
+
+- Extra-payment calculator now supports recurring monthly, annual, one-time lump sum, and start/end periods.
+- Added a UK overpayment calculator URL for England, Scotland and Wales transaction-tax contexts.
+- Added a Canadian accelerated-biweekly comparison URL using monthly, biweekly and accelerated-biweekly schedules.
+- Updated directional readiness: **91/100**. A licensed reviewer remains unavailable and must not be fabricated.

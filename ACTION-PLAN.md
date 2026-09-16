@@ -13,31 +13,29 @@
 
 ## 8–30 天：建立可排名的 P0 工具集
 
-1. 将英文 amortization、extra payments、affordability 从薄指南升级为独立交互工具，而不是仅改 title。
-2. Extra payment 支持 recurring monthly、annual、one-time lump sum、start/end date。
-3. Affordability 支持 income、debt、down payment、DTI，并明确它不是贷款资格判断。
-4. 每页增加公式、可复核示例表、限制、来源、last reviewed 和内部链接。
-5. 建立真实作者、审核者、编辑政策、纠错政策和联系入口。
-6. 拆分并关联 WebPage、SoftwareApplication、Organization、Person/Article Schema。
-
-验收：每个工具都有独立搜索任务、独立 URL、SSR 输入/默认结果、3–5 个引用块、真实署名与来源。
+1. [x] 将英文 amortization、extra payments、affordability 从薄指南升级为独立交互工具。
+2. [x] Extra payment 支持 recurring monthly、annual、one-time lump sum、start/end date。
+3. [x] Affordability 支持 income、debt、down payment、DTI，并明确它不是贷款资格判断。
+4. [x] 每页增加公式、可复核示例表、限制、来源、last reviewed 和内部链接。
+5. [ ] 建立真实作者、审核者、编辑政策、纠错政策和联系入口。编辑与纠错政策已上线；实名审核者不可虚构，待真实人选确认。
+6. [x] 拆分并关联 WebPage、SoftwareApplication、Organization、Person/Article Schema。Person/reviewedBy 仍待真实审核者。
 
 ## 31–60 天：做深三个市场
 
 ### 美国
 
-- 围绕 PITI + PMI + HOA + flood insurance 做完整月供入口。
-- 拆 FHA、VA、USDA、15 vs 30 year；只有功能与规则足够独立时才建 URL。
+- [x] 围绕 PITI + PMI + HOA + flood insurance 做完整月供入口。
+- [ ] 拆 FHA、VA、USDA、15 vs 30 year；只有功能与规则足够独立时才建 URL。当前贷款计划是同一计算器内的输入，尚未拆独立 URL。
 
 ### 英国
 
-- 建 mortgage overpayment calculator。
-- 将 SDLT、LBTT、LTT 按法域拆清；补 repayment vs interest-only、fees、early repayment charge 边界。
+- [x] 建 mortgage overpayment calculator。
+- [x] 将 SDLT、LBTT、LTT 按法域拆清；补 repayment vs interest-only、fees、early repayment charge 边界。过早还款费用仍仅作披露，不建模具体罚金。
 
 ### 加拿大
 
-- 建 accelerated biweekly 对比页。
-- 补 CMHC insurance、GDS/TDS affordability；引用 FCAC/CMHC 官方来源。
+- [x] 建 accelerated biweekly 对比页。
+- [ ] 补 CMHC insurance、GDS/TDS affordability；引用 FCAC/CMHC 官方来源。
 
 验收：每个市场至少有 1 个 hub + 2 个真正独立的专项工具；本地术语、规则、来源、FAQ 均不是机械翻译。
 
