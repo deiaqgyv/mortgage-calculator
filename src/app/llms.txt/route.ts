@@ -17,6 +17,7 @@ ${localeLinks}
 - [Amortization calculator](${primary}amortization-calculator/): Interactive full payment schedule with principal, interest and balance by period.
 - [Extra payment calculator](${primary}extra-payment-calculator/): Interactive comparison of monthly, annual and one-time extra principal, with optional start and end periods.
 - [UK mortgage overpayment calculator](${siteUrl}/en-gb/mortgage-calculator/overpayment-calculator/): UK overpayment illustration with extra payment types; SDLT, LBTT and LTT remain separate.
+- [UK interest-only mortgage calculator](${siteUrl}/en-gb/mortgage-calculator/interest-only-calculator/): Interest-only payment illustration with principal remaining due at term end; transaction taxes remain separate.
 - [Canadian accelerated biweekly calculator](${siteUrl}/en-ca/mortgage-calculator/accelerated-biweekly-calculator/): Monthly, biweekly and accelerated-biweekly comparison using Canadian semi-annual compounding.
 - [Canadian GDS, TDS and CMHC calculator](${siteUrl}/en-ca/mortgage-calculator/gds-tds-calculator/): Educational Gross Debt Service, Total Debt Service and high-ratio CMHC premium illustration; not a lender or insurer decision.
 - [Mortgage affordability calculator](${primary}affordability-calculator/): Interactive home-price scenario using income, debts, recurring ownership costs and editable ratio assumptions; not a lender approval.
@@ -32,7 +33,7 @@ ${localeLinks}
 - Calculations run in the browser; share links encode the selected inputs in the URL.
 - Country and transaction-cost rules show their effective date and review date in the calculator.
 - Content is published by MortgageBreezy as an organization. The site does not currently claim review by a licensed mortgage, legal, tax or financial professional.
-- Guides were last reviewed on 2026-09-16. Local-rule records display their own effective and review dates.
+- Guides were last reviewed on 2026-09-22. Local-rule records display their own effective and review dates.
 - Verify current rates, eligibility and fees with a lender and relevant local authority before relying on an estimate.
 
 ## Citation guidance

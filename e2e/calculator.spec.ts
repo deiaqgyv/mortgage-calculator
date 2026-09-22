@@ -24,6 +24,10 @@ test('publishes UK overpayment and Canadian accelerated-biweekly tools', async (
   expect(uk?.status()).toBe(200);
   await expect(page.getByRole('heading', { level: 1, name: 'UK mortgage overpayment calculator' })).toBeVisible();
   await expect(page.getByText('Annual extra payment', { exact: true })).toBeVisible();
+  const interestOnly = await page.goto('/en-gb/mortgage-calculator/interest-only-calculator/');
+  expect(interestOnly?.status()).toBe(200);
+  await expect(page.getByRole('heading', { level: 1, name: 'UK interest-only mortgage calculator' })).toBeVisible();
+  await expect(page.locator('select.full-select').first()).toHaveValue('interest-only');
   const canada = await page.goto('/en-ca/mortgage-calculator/accelerated-biweekly-calculator/');
   expect(canada?.status()).toBe(200);
   await expect(page.getByRole('heading', { level: 1, name: 'Canadian accelerated biweekly mortgage calculator' })).toBeVisible();
@@ -43,7 +47,13 @@ test('serves every indexed calculator and only the published English guidance pa
     for (const article of articles) {
       const response = await page.goto(`/${locale}/mortgage-calculator/${article}/`);
       expect(response?.status()).toBe(locale === 'en-us' ? 200 : 404);
-      if (locale === 'en-us') await expect(page.locator('article h1')).toBeVisible();
+      if (locale === 'en-us') {
+        await expect(page.locator('article h1')).toBeVisible();
+        if (article === 'privacy') {
+          await expect(page.getByText('MortgageBreezy uses Google Analytics 4')).toBeVisible();
+          await expect(page.getByText('does not currently show ads')).toBeVisible();
+        }
+      }
     }
   }
 });

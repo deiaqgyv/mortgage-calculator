@@ -1,0 +1,7 @@
+export const privacyNoticeBody = [
+  "Calculator inputs are processed in your browser to produce an estimate. MortgageBreezy does not require an account and the calculator does not ask for your name, address, income, bank details or other financial identity information.",
+  "When you create a share link, the selected loan amount, rate, term and related calculator settings are encoded in the URL. Anyone who receives that URL can read those values, so do not share a link containing inputs you consider private.",
+  "Our hosting provider may process standard technical logs needed to deliver and protect the site, such as the requested page, request time, IP address, browser information and error data. Retention and access are governed by the hosting provider and applicable law.",
+  "MortgageBreezy uses Google Analytics 4 to understand which calculator pages are used. The Analytics script loads from googletagmanager.com and typically records the page URL, approximate location, device and browser information, and referral source. MortgageBreezy does not sell calculator inputs, does not use advertising cookies, and does not currently show ads. You can block Analytics with browser settings or a tracking-protection extension. Google's own privacy policy applies to data Google processes.",
+  "You can clear calculator values by resetting the form, removing the share parameters from the URL or closing the page. This notice was published on 25 August 2026 and last reviewed on 16 September 2026.",
+] as const;
