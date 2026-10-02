@@ -38,24 +38,27 @@ test('publishes UK overpayment and Canadian accelerated-biweekly tools', async (
   await expect(page.getByText('CMHC premium', { exact: true })).toBeVisible();
 });
 
-test('serves every indexed calculator and only the published English guidance pages', async ({ page }) => {
+test('serves every indexed calculator and only the published English guidance pages', async ({ page, request }) => {
   const locales = ['en-us', 'en-gb', 'en-ca', 'fr-ca', 'de-de', 'fr-fr', 'es-es'];
   const articles = ['amortization', 'extra-payments', 'affordability', 'methodology', 'legal-notice', 'privacy'];
   for (const locale of locales) {
     const calculator = await page.goto(`/${locale}/mortgage-calculator/`);
     expect(calculator?.status()).toBe(200);
-    for (const article of articles) {
-      const response = await page.goto(`/${locale}/mortgage-calculator/${article}/`);
-      expect(response?.status()).toBe(locale === 'en-us' ? 200 : 404);
-      if (locale === 'en-us') {
-        await expect(page.locator('article h1')).toBeVisible();
-        if (article === 'privacy') {
-          await expect(page.getByText('MortgageBreezy uses Google Analytics 4')).toBeVisible();
-          await expect(page.getByText('does not currently show ads')).toBeVisible();
-        }
-      }
+  }
+  for (const article of articles) {
+    const response = await page.goto(`/en-us/mortgage-calculator/${article}/`);
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('article h1')).toBeVisible();
+    if (article === 'privacy') {
+      await expect(page.getByText('MortgageBreezy uses Google Analytics 4')).toBeVisible();
+      await expect(page.getByText('does not currently show ads')).toBeVisible();
     }
   }
+  const redirected = await request.get('/es-es/mortgage-calculator/methodology', { maxRedirects: 0 });
+  expect(redirected.status()).toBe(308);
+  const followed = await page.goto('/es-es/mortgage-calculator/methodology');
+  expect(followed?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/en-us\/mortgage-calculator\/methodology/);
 });
 
 test('downloads CSV and PDF estimates', async ({ page }) => {
@@ -72,6 +75,8 @@ test('publishes machine-readable AI search guidance and article schema', async (
   const llms = await request.get('/llms.txt');
   expect(llms.status()).toBe(200);
   await expect(llms.text()).resolves.toContain('MortgageBreezy');
+  await expect(llms.text()).resolves.toContain('/en-us/mortgage-calculator/methodology');
+  await expect(llms.text()).resolves.not.toContain('/en-us/mortgage-calculator/methodology/');
   await page.goto('/en-us/mortgage-calculator/methodology/');
   expect(await page.locator('script[type="application/ld+json"]').evaluate((node) => node.innerHTML)).toContain('"Article"');
   await expect(page.getByText('Short answer:', { exact: false })).toBeVisible();

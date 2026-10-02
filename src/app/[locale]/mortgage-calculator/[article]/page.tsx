@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import MortgageCalculator from '../../../../components/mortgage-calculator';
 import AffordabilityCalculator from '../../../../components/affordability-calculator';
 import CanadaAffordabilityCalculator from '../../../../components/canada-affordability-calculator';
@@ -58,8 +58,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; article: string }> }): Promise<Metadata> {
   const { locale, article } = await params;
   const tool = isFocusedToolSlug(article) ? focusedTools[article] : undefined;
-  if (tool && locale === tool.locale) return { title: `${tool.title} | MortgageBreezy`, description: tool.description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` } };
-  if (locale !== 'en-us') return {};
+  if (tool) {
+    const canonical = `${siteUrl}/${tool.locale}/mortgage-calculator/${article}`;
+    if (locale !== tool.locale) return { robots: { index: false, follow: true }, alternates: { canonical } };
+    return { title: `${tool.title} | MortgageBreezy`, description: tool.description, alternates: { canonical } };
+  }
+  if (isArticleSlug(article) && locale !== 'en-us') {
+    return { robots: { index: false, follow: true }, alternates: { canonical: `${siteUrl}/en-us/mortgage-calculator/${article}` } };
+  }
   const page = isArticleSlug(article) ? articles[article] : undefined;
   if (!page) return {};
   return { title: `${page.title} | MortgageBreezy`, description: page.description, alternates: { canonical: `${siteUrl}/${locale}/mortgage-calculator/${article}` } };
@@ -68,13 +74,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
   const { locale, article } = await params;
   if (isFocusedToolSlug(article)) {
     const tool = focusedTools[article];
-    if (locale !== tool.locale) notFound();
+    if (locale !== tool.locale) permanentRedirect(`/${tool.locale}/mortgage-calculator/${article}`);
     const pageUrl = `${siteUrl}/${locale}/mortgage-calculator/${article}`;
     const structuredData = { '@context': 'https://schema.org', '@type': ['WebApplication', 'WebPage'], name: tool.heading, description: tool.description, url: pageUrl, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', isAccessibleForFree: true, inLanguage: localeBySlug[locale as keyof typeof localeBySlug], dateModified: reviewedDate, provider: { '@id': `${siteUrl}/#organization` } };
     const localeCode = localeBySlug[locale as keyof typeof localeBySlug];
     return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />{article === 'affordability-calculator' ? <AffordabilityCalculator /> : article === 'gds-tds-calculator' ? <CanadaAffordabilityCalculator /> : <MortgageCalculator locale={localeCode} heading={tool.heading} intro={tool.intro} extraPaymentModes={article === 'extra-payment-calculator' || article === 'overpayment-calculator'} defaultFrequency={article === 'accelerated-biweekly-calculator' ? 'accelerated-biweekly' : 'monthly'} frequencyComparison={article === 'accelerated-biweekly-calculator'} defaultRepaymentType={article === 'interest-only-calculator' ? 'interest-only' : 'repayment'} />}</>;
   }
-  if (locale !== 'en-us') notFound();
+  if (locale !== 'en-us') {
+    if (isArticleSlug(article)) permanentRedirect(`/en-us/mortgage-calculator/${article}`);
+    notFound();
+  }
   if (!isArticleSlug(article)) notFound();
   const page = articles[article];
   const workedExample = workedExamples[article];

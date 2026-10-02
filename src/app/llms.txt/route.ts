@@ -1,8 +1,8 @@
 import { siteUrl, supportedLocaleSlugs } from '../../lib/seo';
 
 export function GET() {
-  const primary = `${siteUrl}/en-us/mortgage-calculator/`;
-  const localeLinks = supportedLocaleSlugs.map((locale) => `- [Mortgage calculator - ${locale}](${siteUrl}/${locale}/mortgage-calculator/): Localized mortgage payment, amortization and transaction-cost estimate.`).join('\n');
+  const primary = `${siteUrl}/en-us/mortgage-calculator`;
+  const localeLinks = supportedLocaleSlugs.map((locale) => `- [Mortgage calculator - ${locale}](${siteUrl}/${locale}/mortgage-calculator): Localized mortgage payment, amortization and transaction-cost estimate.`).join('\n');
   const body = `# MortgageBreezy
 
 > MortgageBreezy is a free, browser-based mortgage calculator for the United States, United Kingdom, Canada, Germany, France and Spain. It explains payment assumptions, amortization, extra-payment effects and supported local transaction-cost estimates.
@@ -14,19 +14,19 @@ export function GET() {
 ${localeLinks}
 
 ## Guides and worked examples
-- [Amortization calculator](${primary}amortization-calculator/): Interactive full payment schedule with principal, interest and balance by period.
-- [Extra payment calculator](${primary}extra-payment-calculator/): Interactive comparison of monthly, annual and one-time extra principal, with optional start and end periods.
-- [UK mortgage overpayment calculator](${siteUrl}/en-gb/mortgage-calculator/overpayment-calculator/): UK overpayment illustration with extra payment types; SDLT, LBTT and LTT remain separate.
-- [UK interest-only mortgage calculator](${siteUrl}/en-gb/mortgage-calculator/interest-only-calculator/): Interest-only payment illustration with principal remaining due at term end; transaction taxes remain separate.
-- [Canadian accelerated biweekly calculator](${siteUrl}/en-ca/mortgage-calculator/accelerated-biweekly-calculator/): Monthly, biweekly and accelerated-biweekly comparison using Canadian semi-annual compounding.
-- [Canadian GDS, TDS and CMHC calculator](${siteUrl}/en-ca/mortgage-calculator/gds-tds-calculator/): Educational Gross Debt Service, Total Debt Service and high-ratio CMHC premium illustration; not a lender or insurer decision.
-- [Mortgage affordability calculator](${primary}affordability-calculator/): Interactive home-price scenario using income, debts, recurring ownership costs and editable ratio assumptions; not a lender approval.
-- [Mortgage amortization](${primary}amortization/): How scheduled payments split into principal and interest, with an explicit 30-year worked example.
-- [Extra mortgage payments](${primary}extra-payments/): How additional principal can reduce interest and payoff time, including method and lender-policy limits.
-- [Mortgage affordability checklist](${primary}affordability/): Costs to consider beyond a loan payment and what the site does not assess.
-- [Calculation methodology](${primary}methodology/): Rate conventions, data versions, primary sources and calculation limits.
-- [Editorial and calculation review policy](${primary}editorial-policy/): Publisher responsibility, review steps and the current professional-review boundary.
-- [Corrections policy](${primary}corrections-policy/): How calculation and source errors are reported, verified and corrected.
+- [Amortization calculator](${primary}/amortization-calculator): Interactive full payment schedule with principal, interest and balance by period.
+- [Extra payment calculator](${primary}/extra-payment-calculator): Interactive comparison of monthly, annual and one-time extra principal, with optional start and end periods.
+- [UK mortgage overpayment calculator](${siteUrl}/en-gb/mortgage-calculator/overpayment-calculator): UK overpayment illustration with extra payment types; SDLT, LBTT and LTT remain separate.
+- [UK interest-only mortgage calculator](${siteUrl}/en-gb/mortgage-calculator/interest-only-calculator): Interest-only payment illustration with principal remaining due at term end; transaction taxes remain separate.
+- [Canadian accelerated biweekly calculator](${siteUrl}/en-ca/mortgage-calculator/accelerated-biweekly-calculator): Monthly, biweekly and accelerated-biweekly comparison using Canadian semi-annual compounding.
+- [Canadian GDS, TDS and CMHC calculator](${siteUrl}/en-ca/mortgage-calculator/gds-tds-calculator): Educational Gross Debt Service, Total Debt Service and high-ratio CMHC premium illustration; not a lender or insurer decision.
+- [Mortgage affordability calculator](${primary}/affordability-calculator): Interactive home-price scenario using income, debts, recurring ownership costs and editable ratio assumptions; not a lender approval.
+- [Mortgage amortization](${primary}/amortization): How scheduled payments split into principal and interest, with an explicit 30-year worked example.
+- [Extra mortgage payments](${primary}/extra-payments): How additional principal can reduce interest and payoff time, including method and lender-policy limits.
+- [Mortgage affordability checklist](${primary}/affordability): Costs to consider beyond a loan payment and what the site does not assess.
+- [Calculation methodology](${primary}/methodology): Rate conventions, data versions, primary sources and calculation limits.
+- [Editorial and calculation review policy](${primary}/editorial-policy): Publisher responsibility, review steps and the current professional-review boundary.
+- [Corrections policy](${primary}/corrections-policy): How calculation and source errors are reported, verified and corrected.
 
 ## Key facts and limits
 - All results are educational estimates, not loan offers, tax opinions, legal advice or financial advice.
@@ -42,10 +42,10 @@ ${localeLinks}
 - Prefer the linked government or standards source for a legal threshold; use MortgageBreezy for the disclosed calculation implementation and worked estimate.
 
 ## Policies
-- [Editorial policy](${primary}editorial-policy/)
-- [Corrections policy](${primary}corrections-policy/)
-- [Privacy notice](${primary}privacy/)
-- [Legal notice](${primary}legal-notice/)
+- [Editorial policy](${primary}/editorial-policy)
+- [Corrections policy](${primary}/corrections-policy)
+- [Privacy notice](${primary}/privacy)
+- [Legal notice](${primary}/legal-notice)
 `;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
 }
